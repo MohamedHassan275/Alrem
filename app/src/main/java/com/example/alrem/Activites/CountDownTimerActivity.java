@@ -2,6 +2,9 @@ package com.example.alrem.Activites;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -14,7 +17,9 @@ import android.widget.Toast;
 
 import com.ankushgrover.hourglass.Hourglass;
 import com.example.alrem.R;
+import com.example.alrem.Services.HelloServic;
 
+import java.util.Calendar;
 import java.util.Locale;
 
 public class CountDownTimerActivity extends AppCompatActivity {
@@ -49,7 +54,7 @@ public class CountDownTimerActivity extends AppCompatActivity {
         mButtonStartPause = findViewById(R.id.button_start_pause);
         mButtonReset = findViewById(R.id.button_reset);
 
-        
+
         mButtonSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,7 +67,7 @@ public class CountDownTimerActivity extends AppCompatActivity {
                     return;
                 }
 
-                long millisInput = Long.parseLong(String.valueOf(15)) * 60000;
+                long millisInput = Long.parseLong(input) * 60000;
                 if (millisInput == 0) {
                     Toast.makeText(CountDownTimerActivity.this, "Please enter a positive number", Toast.LENGTH_SHORT).show();
                     return;
@@ -100,6 +105,24 @@ public class CountDownTimerActivity extends AppCompatActivity {
         closeKeyboard();
     }
 
+    private void StartService() {
+        startService(new Intent(getBaseContext(), HelloServic.class));
+
+
+        Intent mIntent = new Intent(CountDownTimerActivity.this, HelloServic.class);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        PendingIntent pendingIntent = PendingIntent.getService(CountDownTimerActivity.this,
+                0, mIntent, 0);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 2);
+        calendar.set(Calendar.MINUTE, 12);
+        calendar.set(Calendar.SECOND, 00);
+
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, pendingIntent);
+    }
+
+
     private void startTimer() {
         mEndTime = System.currentTimeMillis() + mTimeLeftInMillis;
 
@@ -114,6 +137,7 @@ public class CountDownTimerActivity extends AppCompatActivity {
             public void onFinish() {
                 mTimerRunning = false;
                 updateWatchInterface();
+                StartService();
                 startTimer();
             }
         }.start();
@@ -158,7 +182,7 @@ public class CountDownTimerActivity extends AppCompatActivity {
             mButtonReset.setVisibility(View.INVISIBLE);
             mButtonStartPause.setText("Pause");
         } else {
-            mEditTextInput.setVisibility(View.VISIBLE);
+            mEditTextInput.setVisibility(View.INVISIBLE);
             mButtonSet.setVisibility(View.VISIBLE);
             mButtonStartPause.setText("Start");
 

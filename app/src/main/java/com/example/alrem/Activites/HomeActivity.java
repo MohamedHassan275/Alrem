@@ -54,11 +54,6 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (mTimerRunnig) {
-                    pauseTimer();
-                } else {
-                   // startTimer();
-                }
 
             }
         });
@@ -91,37 +86,6 @@ public class HomeActivity extends AppCompatActivity {
                 AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
-   /* private HelloServic helloServic = new HelloServic() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            updateGUI(intent); // or whatever method used to update your GUI fields
-        }
-    };
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        registerReceiver(helloServic, new IntentFilter(HelloServic.COUNTDOWN_BR));
-        Log.i(TAG, "Registered broacast receiver");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        unregisterReceiver(helloServic);
-        Log.i(TAG, "Unregistered broacast receiver");
-    }
-
-    @Override
-    public void onStop() {
-        try {
-            unregisterReceiver(helloServic);
-        } catch (Exception e) {
-            // Receiver was probably already stopped in onPause()
-        }
-        super.onStop();
-    }*/
 
     @Override
     public void onDestroy() {
@@ -138,7 +102,7 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    private void pauseTimer() {
+        private void pauseTimer() {
 
         mCountDownTimer.cancel();
         mTimerRunnig = false;
